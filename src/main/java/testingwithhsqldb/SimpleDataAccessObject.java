@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sql.DataSource;
 
 public class SimpleDataAccessObject {
@@ -38,5 +41,44 @@ public class SimpleDataAccessObject {
 		// dernière ligne : on renvoie le résultat
 		return result;
 	}
+        
+        public void insertProduct(int Id, String Nom, int Prix) {
+	
+            String sql = "INSERT INTO Product VALUES(?,?,?);";
+            try (   Connection connection = myDataSource.getConnection();
+                    PreparedStatement stmt = connection.prepareStatement(sql)
+                ) {
+                    
+                    stmt.setInt(1, Id);
+                    stmt.setString(2, Nom);
+                    stmt.setInt(3, Prix);
+			
+                    stmt.executeUpdate();
+
+            } catch (SQLException ex) {
+                Logger.getLogger(SimpleDataAccessObject.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        
+        }
+            
+        public int numberOfProduct() throws SQLException {
+            
+		int result = 0;
+		String sql = "SELECT COUNT(*) AS NUMBER FROM PRODUCT";
+
+		try (   Connection connection = myDataSource.getConnection();
+			Statement stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
+                    ) {
+                        if (rs.next()) {
+                            result = rs.getInt("NUMBER");
+                        }
+		} 
+
+		return result;
+                
+	}
+                    
+        
 	
 }

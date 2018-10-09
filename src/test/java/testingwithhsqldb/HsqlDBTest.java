@@ -30,7 +30,7 @@ public class HsqlDBTest {
 		// On crée le schema de la base de test
 		executeSQLScript(myConnection, "schema.sql");
 		// On y met des données
-		executeSQLScript(myConnection, "bigtestdata.sql");		
+		executeSQLScript(myConnection, "smalltestdata.sql");		
 
             	myObject = new SimpleDataAccessObject(myDataSource);
 	}
@@ -64,6 +64,13 @@ public class HsqlDBTest {
 		String name = myObject.nameOfCustomer(-1);
 		assertNull("name should be null, customer does not exist !", name);
 	}
+        
+        @Test
+        public void TestInsertProduct() throws SQLException {
+            assertEquals(2,myObject.numberOfProduct());
+            myObject.insertProduct(3, "test", 100);
+            assertEquals(3,myObject.numberOfProduct());
+        }
 
 	public static DataSource getDataSource() throws SQLException {
 		org.hsqldb.jdbc.JDBCDataSource ds = new org.hsqldb.jdbc.JDBCDataSource();
